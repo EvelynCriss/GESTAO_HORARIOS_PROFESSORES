@@ -39,7 +39,7 @@ def configura_rotas(app):
     def logout():
         session.clear()
         flash('Logout realizado com sucesso!', 'info')
-        return redirect(url_for('index'))  
+        return redirect(url_for('login'))  
     @app.route('/registro', methods=['GET', 'POST'])
     def registro():
         msg = ''
