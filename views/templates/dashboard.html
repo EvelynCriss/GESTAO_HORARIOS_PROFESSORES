@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard - Gestão de Horários
+{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">
+    Dashboard
+</h1>
+
+<!-- Cards de Estatísticas -->
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3 class="stat-title">
+                Professores
+            </h3>
+
+            <p class="stat-value">
+                {{ stats.total_professores }}
+            </p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3 class="stat-title">
+                Cursos
+            </h3>
+
+            <p class="stat-value">
+                {{ stats.total_cursos }}
+            </p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3 class="stat-title">
+                Disciplinas
+            </h3>
+
+            <p class="stat-value">
+                {{ stats.total_disciplinas }}
+            </p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3 class="stat-title">
+                Aulas Cadastradas
+            </h3>
+
+            <p class="stat-value">
+                {{ stats.total_aulas }}
+            </p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Ações Rápidas -->
+<div class="content-section">
+
+    <h2 class="section-title">
+        Ações Rápidas
+    </h2>
+
+    <div class="quick-actions">
+
+        <!-- Professores -->
+        <a href="{{ url_for('listar_professores') }}"
+           class="action-card">
+
+            <div class="action-icon">
+                👨‍🏫
+            </div>
+
+            <div class="action-text">
+                <h3>Professores</h3>
+                <p>Gerenciar professores</p>
+            </div>
+
+        </a>
+
+
+        <!-- Cursos -->
+        <a href="{{ url_for('listar_cursos') }}"
+           class="action-card">
+
+            <div class="action-icon">
+                🎓
+            </div>
+
+            <div class="action-text">
+                <h3>Cursos</h3>
+                <p>Gerenciar cursos</p>
+            </div>
+
+        </a>
+
+
+        <!-- Disciplinas -->
+        <a href="{{ url_for('listar_disciplinas') }}"
+           class="action-card">
+
+            <div class="action-icon">
+                📚
+            </div>
+
+            <div class="action-text">
+                <h3>Disciplinas</h3>
+                <p>Gerenciar disciplinas</p>
+            </div>
+
+        </a>
+
+
+        <!-- Grade Horária -->
+        <a href="{{ url_for('listar_aulas') }}"
+           class="action-card">
+
+            <div class="action-icon">
+                📅
+            </div>
+
+            <div class="action-text">
+                <h3>Grade Horária</h3>
+                <p>Visualizar horários</p>
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+CREATE DATABASE `sistema_horario_professores`
+
+
+USE sistema_horario_professoreshorario_professores;
+
+
+-- TABELA PROFESSORES
+
+CREATE TABLE professores (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nome VARCHAR(100) NOT NULL,
+
+    email VARCHAR(100)
+
+);
+
+
+-- TABELA CURSOS
+
+CREATE TABLE cursos (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nome VARCHAR(100) NOT NULL,
+
+    periodo VARCHAR(20),
+
+    campus VARCHAR(100)
+
+);
+
+
+-- TABELA DISCIPLINAS
+
+CREATE TABLE disciplinas (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nome VARCHAR(100) NOT NULL,
+
+    cor VARCHAR(20),
+
+    curso_id INT,
+
+    FOREIGN KEY (curso_id)
+    REFERENCES cursos(id)
+
+);
+
+
+-- TABELA DISPONIBILIDADES
+
+CREATE TABLE disponibilidades (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    professor_id INT,
+
+    dia_semana ENUM(
+        'Segunda',
+        'Terça',
+        'Quarta',
+        'Quinta',
+        'Sexta'
+    ),
+
+    FOREIGN KEY (professor_id)
+    REFERENCES professores(id)
+
+);
+
+
+-- TABELA AULAS
+
+CREATE TABLE aulas (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    professor_id INT,
+
+    curso_id INT,
+
+    disciplina_id INT,
+
+    dia_semana ENUM(
+        'Segunda',
+        'Terça',
+        'Quarta',
+        'Quinta',
+        'Sexta'
+    ),
+
+    FOREIGN KEY (professor_id)
+    REFERENCES professores(id),
+
+    FOREIGN KEY (curso_id)
+    REFERENCES cursos(id),
+
+    FOREIGN KEY (disciplina_id)
+    REFERENCES disciplinas(id)
+
+);
+
+
+
+-- DADOS EXEMPLO
+
+INSERT INTO professores (nome, email)
+VALUES
+('Adriana', 'adriana@gmail.com'),
+('Carlos', 'carlos@gmail.com');
+
+
+INSERT INTO cursos (nome, periodo, campus)
+VALUES
+('Engenharia Produção', 'Noturno', 'Curitiba'),
+('Engenharia Automotiva', 'Noturno', 'Curitiba');
+
+
+INSERT INTO disciplinas (nome, cor, curso_id)
+VALUES
+('Gestão Industrial', 'Azul', 1),
+('Modelagem 3D', 'Verde', 2);
+
+
+INSERT INTO disponibilidades (professor_id, dia_semana)
+VALUES
+(1, 'Segunda'),
+(1, 'Quarta'),
+(2, 'Terça');
+
+
+INSERT INTO aulas (
+    professor_id,
+    curso_id,
+    disciplina_id,
+    dia_semana
+)
+VALUES
+(1, 1, 1, 'Segunda'),
+(2, 2, 2, 'Terça');

@@ -1,0 +1,456 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Pixelify+Sans:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Vast+Shadow&display=swap');
+
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #c1c1c1;
+}
+
+.header {
+    background-color: #12084f;  
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);          
+    height: 100px;               
+    display: flex;
+    align-items: center;         
+    justify-content: space-between;
+}
+
+.logo {
+    height: 300px;               
+    max-height: 100%;   
+}
+
+.nav {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    color: #ffff;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 15px;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+}
+
+.nav-link:hover {
+    color: #a6a6a6;
+}
+
+.bg-primary text-white text-center p-5 {
+    background-color: #12084f;  
+    color: #ffff;                
+    text-align: center;          
+    padding: 20px;               
+}
+
+
+/*PÁGINA INDEX*/
+.hero {
+    padding: 90px 20px;
+    text-align: center;
+    color: #12084f;
+    box-shadow: 0 4px 15px #11084f14;
+}
+
+.hero h1 {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* Botão principal */
+.btn-custom {
+    background-color: #fff;
+    color: #12084f;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    transition: 0.3s ease;
+    border: none;
+    box-shadow: 0 3px 10px rgba(255,255,255,0.3);
+}
+
+.btn-custom:hover {
+    background-color: #e4e4e4;
+    color: #12084f;
+    transform: translateY(-2px);
+}
+
+/* ===========================
+   CARDS
+   =========================== */
+
+.section-space {
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.custom-card {
+    background: #fff;
+    padding: 35px 25px;
+    border-radius: 20px;
+    transition: 0.3s ease;
+    border-left: 5px solid #12084f;  
+}
+
+.custom-card h4 {
+    color: #12084f;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.custom-card p {
+    color: #5a5a5a;
+}
+
+.custom-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+
+
+
+/*PÁGINA SOBRE*/
+
+.sobre-container {
+    padding: 30px 35px;
+    border-radius: 25px;
+    max-width: 900px;
+    margin: 50px auto;
+}
+
+.sobre-container h2 {
+    color: #12084f;
+    font-weight: 700;
+    margin-top: -20px;
+}
+
+.sobre-container h3 {
+    color: #12084f;
+    font-weight: 600;
+    margin-top: 40px;
+}
+
+.sobre-container p {
+    color: #444;
+    font-size: 21px;
+    line-height: 1.6;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Lista estilizada */
+.sobre-list .list-group-item {
+    border: none;
+    border-left: 5px solid #12084f;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #f7f7f7;
+    color: #333;
+    transition: 0.3s ease;
+}
+
+.sobre-list .list-group-item:hover {
+    background: #ececec;
+    transform: translateX(5px);
+}
+
+/*PÁGINA CONTATO*/
+
+/* Container do formulário */
+.contato-container {
+    background: #ffffff;
+    padding: 45px 35px;
+    border-radius: 25px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+    max-width: 850px;
+    margin: 50px auto;
+    width: 500px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.22);
+    border-top: 4px solid #12084f;
+}
+
+.contato-container h2 {
+    color: #12084f;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* Labels */
+.contato-container .form-label {
+    font-weight: 600;
+    color: #12084f;
+}
+
+/* Inputs */
+.contato-container .form-control {
+    border-radius: 12px;
+    border: 1px solid #a6a6a6;
+    padding: 12px;
+    transition: 0.3s ease;
+}
+
+.contato-container .form-control:focus {
+    border-color: #12084f;
+    box-shadow: 0 0 0 0.2rem rgba(18, 8, 79, 0.25);
+}
+
+/* Botão */
+.contato-container .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #12084f;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+}
+
+.contato-container .btn-primary:hover {
+    background-color: #1b0f78;
+    transform: translateY(-3px);
+}
+
+/* Mensagem de sucesso */
+.contato-container .alert-success {
+    background-color: #d3ffd9;
+    color: #0c7a1a;
+    border-left: 5px solid #0c7a1a;
+    border-radius: 12px;
+}
+
+
+/*PÁGINA LOGIN*/
+.login-page-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; 
+}
+
+/* CARD */
+.login-card {
+    background: #fff;
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: center;
+    color: #12084f;
+    border-top: 4px solid #12084f;
+}
+
+/* TÍTULO */
+.login-card h1 {
+    margin: 0 0 25px;
+    font-size: 28px;
+    color: #12084f;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* MENSAGENS */
+.message-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #c3e6cb;
+}
+
+.message-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #f5c6cb;
+}
+
+/* LABEL */
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #12084f;
+    font-weight: 600;
+}
+
+/* INPUT */
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #a6a6a6;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #12084f;
+    box-shadow: 0 0 6px rgba(18, 8, 79, 0.35);
+}
+
+/* CHECKBOX LEMBRAR-ME */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: #12084f;
+    cursor: pointer;
+}
+
+.form-checkbox {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #12084f;
+}
+
+/* BOTÃO */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #12084f;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: #0e063f;
+}
+
+.register-link {
+    color: #12084f;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.register-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Registro */
+.auth-page {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-card {
+    background: #fff;
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: center;
+    color: #12084f;
+    border-top: 4px solid #12084f;
+}
+
+.auth-card h1 {
+    margin-bottom: 20px;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.auth-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-card label {
+    text-align: left;
+    font-weight: 600;
+}
+
+.auth-card input {
+    padding: 12px;
+    border: 1px solid #a6a6a6;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.auth-btn {
+    background: #12084f;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.auth-btn:hover {
+    background: #0e063e;
+}
+
+.auth-card a {
+    color: #12084f;
+    font-weight: 600;
+    text-decoration: none;  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
