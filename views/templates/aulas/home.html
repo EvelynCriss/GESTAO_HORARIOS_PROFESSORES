@@ -3,35 +3,6 @@
 {% block title %}Aulas{% endblock %}
 
 {% block content %}
-<style>
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .search-filter-container {
-        display: flex;
-        gap: 10px;
-        flex-grow: 1;
-        max-width: 500px;
-    }
-    th.sortable {
-        cursor: pointer;
-        user-select: none;
-        transition: background-color 0.2s;
-    }
-    th.sortable:hover {
-        background-color: #f0f0f0;
-    }
-    .sort-icon {
-        font-size: 0.8em;
-        margin-left: 5px;
-        color: #666;
-    }
-</style>
 
 <div class="page-header">
     <h1 class="page-title">Aulas</h1>
@@ -74,8 +45,8 @@
                                 13h30 às 17h40
                             {% elif a.curso_periodo == 'Noturno' %}
                                 19h00 às 23h10
-                            {% elif a.curso_periodo == 'Não especificado' %}
-                                Horário a definir
+                            {% elif a.curso_periodo == 'Integral' %}
+                                Não especificado
                             {% else %}
                                 -
                             {% endif %}

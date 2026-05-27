@@ -19,7 +19,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -54,7 +54,7 @@ body {
 }
 
 .btn-logout {
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     color: #282c5a;
     padding: 8px 20px;
     border-radius: 5px;
@@ -142,6 +142,7 @@ body {
         transform: translateY(-20px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -201,13 +202,13 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .stat-icon {
@@ -264,7 +265,7 @@ body {
     background-color: white;
     border-radius: 10px;
     padding: 25px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .section-title {
@@ -466,7 +467,7 @@ textarea.form-control {
     background-color: white;
     border-radius: 10px;
     padding: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     max-width: 800px;
 }
 
@@ -496,7 +497,7 @@ textarea.form-control {
     background-color: white;
     border-radius: 10px;
     padding: 25px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .table {
@@ -570,7 +571,7 @@ textarea.form-control {
     background-color: white;
     border-radius: 10px;
     padding: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* DASHBOARD*/
@@ -667,3 +668,267 @@ textarea.form-control {
     color: #999;
 }
 
+/* --- Estilos comuns para Toolbar e Tabelas --- */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-container,
+.search-filter-container {
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+th.sortable:hover {
+    background-color: #f0f0f0;
+}
+
+.sort-icon {
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: #666;
+}
+
+/* --- Estilos da Grade Horária (Calendário) --- */
+.prof-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    cursor: pointer;
+}
+.prof-icon {
+    font-size: 28px;
+    background: #f0f4f8;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.prof-title {
+    color: #12084f;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.calendar-table th {
+    text-align: center !important;
+    width: 18%;
+}
+
+.calendar-table th.time-header {
+    width: 10%;
+    text-align: left !important;
+}
+
+.calendar-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px !important;
+    height: 90px;
+    transition: all 0.2s;
+}
+
+.calendar-table td.time-cell {
+    text-align: left;
+    background-color: #f9f9f9;
+    font-size: 12px;
+    color: #555;
+    font-weight: 600;
+    border-right: 2px solid #eee;
+}
+
+.time-label {
+    color: #12084f;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.unavailable-day {
+    background: repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #fafafa 10px, #fafafa 20px) !important;
+    cursor: not-allowed !important;
+}
+
+.class-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #29b7eb;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: grab;
+    margin-bottom: 5px;
+}
+
+.class-box:active {
+    cursor: grabbing;
+}
+
+.class-box .course-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #12084f;
+    margin-bottom: 3px;
+}
+
+.class-box .subject-title {
+    font-size: 12px;
+    color: #555;
+}
+
+.drag-over {
+    background-color: #f0f8ff !important;
+    border: 2px dashed #29b7eb !important;
+}
+
+/* --- Estilos para Tabelas Dinâmicas --- */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.search-filter-container {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+th.sortable:hover {
+    background-color: #e9ecef;
+}
+.sort-icon {
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: #666;
+}
+.table-wrapper {
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* --- Animações --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Grade Horária Estilizada --- */
+.prof-card {
+    animation: fadeIn 0.6s ease-out forwards;
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease;
+}
+
+.prof-card:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.calendar-table {
+    border-collapse: separate !important;
+    border-spacing: 2px;
+}
+
+.calendar-table th {
+    background-color: #12084f !important;
+    color: white !important;
+    border-radius: 8px 8px 0 0;
+}
+
+.calendar-table td {
+    background-color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.calendar-table td:hover:not(.time-cell):not(.unavailable-day) {
+    background-color: #f0f7ff;
+}
+
+/* --- Caixas de Aula (Cartões) --- */
+.class-box {
+    background-color: #ffffff;
+    border: 1px solid #29b7eb;
+    border-left: 5px solid #29b7eb;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: grab;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+    user-select: none;
+}
+
+.class-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.class-box .course-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #12084f;
+}
+
+.class-box .subject-title {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* --- Marcação de Bloqueio (Indisponível) --- */
+.unavailable-day {
+    background: repeating-linear-gradient(45deg, #f8f9fa, #f8f9fa 10px, #f1f3f5 10px, #f1f3f5 20px) !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.drag-over {
+    background-color: #d1e7dd !important;
+    border: 2px dashed #0f5132 !important;
+}
+
+/* --- Cards Expansíveis --- */
+.prof-body {
+    display: none; /* Começa fechado */
+    padding-top: 15px;
+}
+
+.prof-card.open .prof-body {
+    display: block; /* Abre quando tem a classe 'open' */
+}
+
+.toggle-icon {
+    font-size: 18px;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    color: #29b7eb;
+}
+
+.prof-card.open .toggle-icon {
+    transform: rotate(180deg); /* Gira a seta ao abrir */
+}
+
+.prof-header {
+    cursor: pointer;
+    user-select: none;
+}

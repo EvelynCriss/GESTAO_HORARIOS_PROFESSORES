@@ -77,21 +77,30 @@ class Aula:
         return result is not None
 
     @staticmethod
-    def professor_tem_conflito(professor_id, dia_semana, aula_id=None):
+    def professor_tem_conflito(professor_id, dia_semana, curso_id, aula_id=None):
         conn = Aula.get_connection()
         cursor = conn.cursor(dictionary=True)
+        
+        # A lógica agora: procura aulas do professor no mesmo dia 
+        # QUE TAMBÉM estejam no mesmo período do curso que estamos tentando adicionar
         query = """
-            SELECT id FROM aulas
-            WHERE professor_id = %s AND dia_semana = %s
+            SELECT a.id 
+            FROM aulas a
+            JOIN cursos c ON a.curso_id = c.id
+            WHERE a.professor_id = %s 
+            AND a.dia_semana = %s
+            AND c.periodo = (SELECT periodo FROM cursos WHERE id = %s)
         """
-        params = [professor_id, dia_semana]
+        params = [professor_id, dia_semana, curso_id]
+        
         if aula_id:
-            query += " AND id != %s"
+            query += " AND a.id != %s"
             params.append(aula_id)
+            
         cursor.execute(query, params)
         result = cursor.fetchone()
         conn.close()
-        return result is not None
+        return result is not None  # True = tem conflito
 
     @staticmethod
     def curso_tem_conflito(curso_id, dia_semana, aula_id=None):
