@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Aulas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Aulas</h1>
+    <a href="{{ url_for('add_aula') }}" class="btn btn-primary">Adicionar Aula</a>
+</div>
+
+<div class="content-section">
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Curso</th>
+                    <th>Disciplina</th>
+                    <th>Professor</th>
+                    <th>Dia da Semana</th>
+                    <th>Horário</th>
+                    <th style="width: 150px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if aulas %}
+                    {% for a in aulas %}
+                    <tr>
+                        <td>{{ a.id }}</td>
+                        <td>{{ a.curso_nome }}</td>
+                        <td>{{ a.disciplina_nome }}</td>
+                        <td>{{ a.professor_nome }}</td>
+                        <td>{{ a.dia_semana }}</td>
+                        <td>19h às 22h10</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ url_for('deletar_aula', id=a.id) }}"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Tem certeza que deseja remover esta aula?')">Remover</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
+                            Nenhuma aula cadastrada ainda.
+                            <br>
+                            <a href="{{ url_for('add_aula') }}" style="color: #12084f;">
+                                Clique aqui para adicionar a primeira
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

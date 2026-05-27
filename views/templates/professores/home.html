@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Professores{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Professores</h1>
+    <a href="{{ url_for('add_professor') }}" class="btn btn-primary">Adicionar Professor</a>
+</div>
+
+<div class="content-section">
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Dias Disponíveis</th>
+                    <th style="width: 200px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if professores %}
+                    {% for p in professores %}
+                    <tr>
+                        <td>{{ p.id }}</td>
+                        <td><strong>{{ p.nome }}</strong></td>
+                        <td>{{ p.email or '-' }}</td>
+                        <td>{{ p.telefone or '-' }}</td>
+                        <td>{{ p.dias_disponiveis or '-' }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ url_for('edit_professor', id=p.id) }}" 
+                                   class="btn btn-secondary btn-sm">Editar</a>
+                                <a href="{{ url_for('deletar_professor', id=p.id) }}" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Tem certeza que deseja deletar este professor?')">Deletar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                            Nenhum professor cadastrado ainda.
+                            <br>
+                            <a href="{{ url_for('add_professor') }}" style="color: #12084f;">
+                                Clique aqui para adicionar o primeiro
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

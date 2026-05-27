@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Professor{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Editar Professor</h1>
+    <a href="{{ url_for('listar_professores') }}" class="btn btn-secondary">Voltar</a>
+</div>
+
+<div class="content-section">
+    <form method="POST" action="{{ url_for('edit_professor', id=professor.id) }}">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="nome">Nome do Professor</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="nome" 
+                       name="nome" 
+                       value="{{ professor.nome }}"
+                       required
+                       placeholder="Digite o nome do professor">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" 
+                       class="form-control" 
+                       id="email" 
+                       name="email"
+                       value="{{ professor.email or '' }}"
+                       placeholder="contato@empresa.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="telefone">Telefone</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="telefone" 
+                       name="telefone"
+                       value="{{ professor.telefone or '' }}"
+                       maxlength="15"
+                       placeholder="(00) 00000-0000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Dias disponíveis</label>
+            <div class="form-row">
+                {% for dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'] %}
+                <div class="form-check">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           id="dia_{{ loop.index }}"
+                           name="dias_semana"
+                           value="{{ dia }}"
+                           {% if dia in dias_selecionados %}checked{% endif %}>
+                    <label class="form-check-label" for="dia_{{ loop.index }}">{{ dia }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Atualizar Professor</button>
+            <a href="{{ url_for('listar_professores') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
