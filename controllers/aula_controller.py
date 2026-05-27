@@ -24,17 +24,14 @@ def configura_rotas(app):
             disciplina_id = request.form.get('disciplina_id')
             dia_semana = request.form.get('dia_semana')
 
-            # 1. DISPONIBILIDADE DO PROFESSOR
             if not Aula.professor_disponivel(professor_id, dia_semana):
                 flash('Professor não está disponível nesse dia!', 'danger')
                 return redirect(url_for('add_aula'))
 
-            # 2. CONFLITO DE PROFESSOR
             if Aula.professor_tem_conflito(professor_id, dia_semana):
                 flash('Professor já possui aula neste dia!', 'danger')
                 return redirect(url_for('add_aula'))
 
-            # 3. CONFLITO DE CURSO
             if Aula.curso_tem_conflito(curso_id, dia_semana):
                 flash('Curso já possui aula neste dia!', 'danger')
                 return redirect(url_for('add_aula'))
@@ -44,6 +41,41 @@ def configura_rotas(app):
             return redirect(url_for('listar_aulas'))
 
         return render_template('aulas/add.html',
+                               professores=professores,
+                               cursos=cursos,
+                               disciplinas=disciplinas)
+
+    @app.route('/aulas/edit/<int:id>', methods=['GET', 'POST'])
+    def edit_aula(id):
+        aula = Aula.get_aula(id)
+        professores = Professor.get_professores()
+        cursos = Curso.get_cursos()
+        disciplinas = Disciplina.get_disciplinas()
+
+        if request.method == 'POST':
+            professor_id = request.form.get('professor_id')
+            curso_id = request.form.get('curso_id')
+            disciplina_id = request.form.get('disciplina_id')
+            dia_semana = request.form.get('dia_semana')
+
+            if not Aula.professor_disponivel(professor_id, dia_semana):
+                flash('Professor não está disponível nesse dia!', 'danger')
+                return redirect(url_for('edit_aula', id=id))
+
+            if Aula.professor_tem_conflito(professor_id, dia_semana, id):
+                flash('Professor já possui aula neste dia!', 'danger')
+                return redirect(url_for('edit_aula', id=id))
+
+            if Aula.curso_tem_conflito(curso_id, dia_semana, id):
+                flash('Curso já possui aula neste dia!', 'danger')
+                return redirect(url_for('edit_aula', id=id))
+
+            Aula.atualizar_aula(id, professor_id, curso_id, disciplina_id, dia_semana)
+            flash('Aula atualizada com sucesso!', 'success')
+            return redirect(url_for('listar_aulas'))
+
+        return render_template('aulas/edit.html',
+                               aula=aula,
                                professores=professores,
                                cursos=cursos,
                                disciplinas=disciplinas)

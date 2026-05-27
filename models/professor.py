@@ -24,6 +24,17 @@ class Professor:
         professores = cursor.fetchall()
         conn.close()
         return professores
+    
+    @staticmethod
+    def get_professor(id):
+        conn = Professor.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM professores WHERE id = %s", (id,))
+        professor = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        return professor
 
     @staticmethod
     def criar_professor(nome, email=None, telefone=None):

@@ -14,10 +14,10 @@
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label" for="curso_id">Curso</label>
-                <select class="form-control" id="curso_id" name="curso_id" required>
+                <select class="form-control" id="curso_id" name="curso_id" required onchange="atualizarHorario()">
                     <option value="">Selecione o curso</option>
                     {% for c in cursos %}
-                    <option value="{{ c.id }}" {% if c.id == aula.curso_id %}selected{% endif %}>
+                    <option value="{{ c.id }}" data-periodo="{{ c.periodo }}" {% if c.id == aula.curso_id %}selected{% endif %}>
                         {{ c.nome }}
                     </option>
                     {% endfor %}
@@ -66,7 +66,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Horário</label>
-                <input type="text" class="form-control" value="19h às 22h10" disabled>
+                <input type="text" id="horario_input" class="form-control" value="-" disabled>
             </div>
         </div>
 
@@ -76,4 +76,33 @@
         </div>
     </form>
 </div>
+
+<script>
+    function atualizarHorario() {
+        let select = document.getElementById('curso_id');
+        if (!select.value) {
+            document.getElementById('horario_input').value = '-';
+            return;
+        }
+        let option = select.options[select.selectedIndex];
+        let periodo = option.getAttribute('data-periodo');
+        let input = document.getElementById('horario_input');
+        
+        if (periodo === 'Matutino') {
+            input.value = '08h00 às 12h10';
+        } else if (periodo === 'Vespertino') {
+            input.value = '13h30 às 17h40';
+        } else if (periodo === 'Noturno') {
+            input.value = '19h00 às 23h10';
+        } else if (periodo === 'Integral') {
+            input.value = 'Não especificado';
+        } else {
+            input.value = '-';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        atualizarHorario();
+    });
+</script>
 {% endblock %}

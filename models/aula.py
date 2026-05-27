@@ -15,6 +15,7 @@ class Aula:
             SELECT a.*,
                    p.nome AS professor_nome,
                    c.nome AS curso_nome,
+                   c.periodo AS curso_periodo,
                    d.nome AS disciplina_nome
             FROM aulas a
             JOIN professores p ON p.id = a.professor_id
@@ -34,6 +35,7 @@ class Aula:
             SELECT a.*,
                    p.nome AS professor_nome,
                    c.nome AS curso_nome,
+                   c.periodo AS curso_periodo,
                    d.nome AS disciplina_nome
             FROM aulas a
             JOIN professores p ON p.id = a.professor_id
@@ -62,8 +64,6 @@ class Aula:
         conn.close()
         return aulas
 
-    # ─── VALIDAÇÕES ─────────────────────────────
-
     @staticmethod
     def professor_disponivel(professor_id, dia_semana):
         conn = Aula.get_connection()
@@ -74,7 +74,7 @@ class Aula:
         """, (professor_id, dia_semana))
         result = cursor.fetchone()
         conn.close()
-        return result is not None  # True = disponível
+        return result is not None
 
     @staticmethod
     def professor_tem_conflito(professor_id, dia_semana, aula_id=None):
@@ -85,13 +85,13 @@ class Aula:
             WHERE professor_id = %s AND dia_semana = %s
         """
         params = [professor_id, dia_semana]
-        if aula_id:  # ignora a própria aula no caso de edição
+        if aula_id:
             query += " AND id != %s"
             params.append(aula_id)
         cursor.execute(query, params)
         result = cursor.fetchone()
         conn.close()
-        return result is not None  # True = tem conflito
+        return result is not None
 
     @staticmethod
     def curso_tem_conflito(curso_id, dia_semana, aula_id=None):
@@ -108,9 +108,7 @@ class Aula:
         cursor.execute(query, params)
         result = cursor.fetchone()
         conn.close()
-        return result is not None  # True = tem conflito
-
-    # ─── CRUD ────────────────────────────────────
+        return result is not None
 
     @staticmethod
     def criar_aula(professor_id, curso_id, disciplina_id, dia_semana):

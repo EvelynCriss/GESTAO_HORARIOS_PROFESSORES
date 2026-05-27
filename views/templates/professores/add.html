@@ -38,8 +38,9 @@
                        class="form-control" 
                        id="telefone" 
                        name="telefone"
-                       maxlength="15"
-                       placeholder="(00) 00000-0000">
+                       maxlength="16"
+                       placeholder="(00) 0 0000-0000"
+                       oninput="aplicarMascaraTelefone(this)">
             </div>
         </div>
 
@@ -65,4 +66,33 @@
         </div>
     </form>
 </div>
+
+<script>
+    function aplicarMascaraTelefone(input) {
+        // 1. Remove tudo o que não for dígito (letras, espaços, traços antigos)
+        let valor = input.value.replace(/\D/g, '');
+        
+        // 2. Limita a string a 11 números (tamanho máximo de um celular com DDD)
+        valor = valor.substring(0, 11);
+        
+        let formatado = "";
+        
+        // 3. Monta a máscara gradativamente baseada em quantos números foram digitados
+        if (valor.length > 0) {
+            formatado += "(" + valor.substring(0, 2);
+        }
+        if (valor.length > 2) {
+            formatado += ") " + valor.substring(2, 3);
+        }
+        if (valor.length > 3) {
+            formatado += " " + valor.substring(3, 7);
+        }
+        if (valor.length > 7) {
+            formatado += "-" + valor.substring(7, 11);
+        }
+        
+        // 4. Devolve o valor formatado para o campo
+        input.value = formatado;
+    }
+</script>
 {% endblock %}
