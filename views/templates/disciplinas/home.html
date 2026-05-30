@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Disciplinas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Disciplinas</h1>
+</div>
+
+<div class="toolbar">
+    <div class="search-filter-container">
+        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por disciplina ou curso...">
+    </div>
+    <a href="{{ url_for('add_disciplina') }}" class="btn btn-primary">Nova Disciplina</a>
+</div>
+
+<div class="content-section">
+    <div class="table-container">
+        <table class="data-table" id="disciplinasTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="sortable" onclick="ordenarTabela(1)">Nome da Disciplina <span class="sort-icon">⇅</span>
+                    </th>
+                    <th>Cor de Identificação</th>
+                    <th class="sortable" onclick="ordenarTabela(3)">Curso Vinculado <span class="sort-icon">⇅</span>
+                    </th>
+                    <th style="width: 200px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if disciplinas %}
+                {% for d in disciplinas %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td><strong>{{ d.nome }}</strong></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="display: inline-block; width: 20px; height: 20px; background-color: {{ d.cor or '#cccccc' }}; border-radius: 4px; border: 1px solid #ccc;"></span>
+                            {{ d.cor or 'Sem cor' }}
+                        </div>
+                    </td>
+                    <td>{{ d.curso_nome }} ({{ d.curso_periodo }})</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('edit_disciplina', id=d.id) }}"
+                                class="btn btn-secondary btn-sm">Editar</a>
+                            <a href="{{ url_for('deletar_disciplina', id=d.id) }}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Tem certeza que deseja remover esta disciplina?')">Remover</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr class="empty-row">
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #999;">
+                        Nenhuma disciplina registada ainda.
+                        <br>
+                        <a href="{{ url_for('add_disciplina') }}" style="color: #12084f;">
+                            Clique aqui para adicionar a primeira
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', filtrarTabela);
+
+    function filtrarTabela() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let table = document.getElementById('disciplinasTable');
+        let trs = table.querySelectorAll('tbody tr');
+
+        trs.forEach(tr => {
+            if (tr.classList.contains('empty-row')) return;
+
+            let match = false;
+            let nomeDisciplina = tr.cells[1].textContent.toLowerCase();
+            let nomeCurso = tr.cells[3].textContent.toLowerCase();
+
+            if (nomeDisciplina.includes(input) || nomeCurso.includes(input)) {
+                match = true;
+            }
+
+            tr.style.display = match ? '' : 'none';
+        });
+    }
+
+    let direcaoOrdenacao = {};
+
+    function ordenarTabela(columnIndex) {
+        let table = document.getElementById('disciplinasTable');
+        let tbody = table.querySelector('tbody');
+        let rows = Array.from(tbody.querySelectorAll('tr'));
+
+        if (rows.length === 1 && rows[0].classList.contains('empty-row')) return;
+
+        if (direcaoOrdenacao[columnIndex] === undefined) {
+            direcaoOrdenacao[columnIndex] = true;
+        }
+        let ascendente = direcaoOrdenacao[columnIndex];
+        direcaoOrdenacao[columnIndex] = !ascendente;
+
+        document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '⇅');
+
+        let cabecalhoAtual = table.querySelectorAll('th')[columnIndex];
+        let iconeAtual = cabecalhoAtual.querySelector('.sort-icon');
+        if (iconeAtual) {
+            iconeAtual.textContent = ascendente ? '↑' : '↓';
+        }
+
+        rows.sort((a, b) => {
+            let celulaA = a.cells[columnIndex].textContent.trim().toLowerCase();
+            let celulaB = b.cells[columnIndex].textContent.trim().toLowerCase();
+
+            if (celulaA < celulaB) return ascendente ? -1 : 1;
+            if (celulaA > celulaB) return ascendente ? 1 : -1;
+            return 0;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+{% endblock %}

@@ -10,8 +10,8 @@
 
 <div class="toolbar">
     <div class="search-filter-container">
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por curso, período ou campus...">
-        <button id="filterBtn" class="btn btn-secondary" onclick="filtrarTabela()">Filtrar</button>
+        <input type="text" id="searchInput" class="form-control"
+            placeholder="Pesquisar por curso, período ou campus...">
     </div>
     <a href="{{ url_for('add_curso') }}" class="btn btn-primary">Adicionar Curso</a>
 </div>
@@ -30,32 +30,31 @@
             </thead>
             <tbody>
                 {% if cursos %}
-                    {% for c in cursos %}
-                    <tr>
-                        <td>{{ c.id }}</td>
-                        <td>{{ c.nome }}</td>
-                        <td>{{ c.periodo }}</td>
-                        <td>{{ c.campus }}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ url_for('edit_curso', id=c.id) }}" class="btn btn-primary btn-sm">Editar</a>
-                                <a href="{{ url_for('deletar_curso', id=c.id) }}"
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Tem certeza que deseja remover este curso?')">Remover</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                {% for c in cursos %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.nome }}</td>
+                    <td>{{ c.periodo }}</td>
+                    <td>{{ c.campus }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('edit_curso', id=c.id) }}" class="btn btn-primary btn-sm">Editar</a>
+                            <a href="{{ url_for('deletar_curso', id=c.id) }}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Tem certeza que deseja remover este curso?')">Remover</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
                 {% else %}
-                    <tr class="empty-row">
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #999;">
-                            Nenhum curso cadastrado ainda.
-                            <br>
-                            <a href="{{ url_for('add_curso') }}" style="color: #12084f;">
-                                Clique aqui para adicionar o primeiro
-                            </a>
-                        </td>
-                    </tr>
+                <tr class="empty-row">
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #999;">
+                        Nenhum curso cadastrado ainda.
+                        <br>
+                        <a href="{{ url_for('add_curso') }}" style="color: #12084f;">
+                            Clique aqui para adicionar o primeiro
+                        </a>
+                    </td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>
@@ -63,7 +62,6 @@
 </div>
 
 <script>
-    // --- LÓGICA DE PESQUISA / FILTRO ---
     document.getElementById('searchInput').addEventListener('keyup', filtrarTabela);
 
     function filtrarTabela() {
@@ -84,8 +82,7 @@
         });
     }
 
-    // --- LÓGICA DE ORDENAÇÃO ---
-    let direcaoOrdenacao = [true, true, true, true]; 
+    let direcaoOrdenacao = [true, true, true, true];
 
     function ordenarTabela(columnIndex) {
         let table = document.getElementById('cursosTable');

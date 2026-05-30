@@ -8,7 +8,6 @@ class Professor:
     def get_connection():
         return mysql.connector.connect(**db_config)
 
-
     @staticmethod
     def get_professores():
         conn = Professor.get_connection()
@@ -24,7 +23,7 @@ class Professor:
         professores = cursor.fetchall()
         conn.close()
         return professores
-    
+
     @staticmethod
     def get_professor(id):
         conn = Professor.get_connection()
@@ -33,7 +32,7 @@ class Professor:
         professor = cursor.fetchone()
         cursor.close()
         conn.close()
-        
+
         return professor
 
     @staticmethod
@@ -45,11 +44,9 @@ class Professor:
             VALUES (%s, %s, %s)
         """, (nome, email, telefone))
         conn.commit()
-        professor_id = cursor.lastrowid  # ← retorna o id
+        professor_id = cursor.lastrowid
         conn.close()
         return professor_id
-
-
 
     @staticmethod
     def atualizar_professor(id, nome, email=None, telefone=None):
@@ -72,9 +69,6 @@ class Professor:
         conn.commit()
 
         conn.close()
-
-
-
 
     @staticmethod
     def deletar_professor(id):

@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
 from email_validator import validate_email, EmailNotValidError
-from models.login import Login   
+from models.login import Login
 
 
 def configura_rotas(app):
@@ -27,19 +27,20 @@ def configura_rotas(app):
                 session['nome'] = usuario['nome']
                 session['email'] = usuario['email']
                 session.permanent = True if remember else False
-                
+
                 flash('Login realizado com sucesso!', 'success')
                 return redirect(url_for('dashboard'))
             else:
                 msg = 'E-mail ou senha incorretos!'
 
-        return render_template('usuarios/login.html', msg=msg) 
+        return render_template('usuarios/login.html', msg=msg)
 
     @app.route('/logout')
     def logout():
         session.clear()
         flash('Logout realizado com sucesso!', 'info')
-        return redirect(url_for('login'))  
+        return redirect(url_for('login'))
+
     @app.route('/registro', methods=['GET', 'POST'])
     def registro():
         msg = ''
@@ -48,7 +49,7 @@ def configura_rotas(app):
             nome = request.form.get('nome')
             email = request.form.get('email')
             senha = request.form.get('senha')
-            
+
             if not nome or not email or not senha:
                 msg = 'Preencha todos os campos!'
                 return render_template('usuarios/registro.html', msg=msg)

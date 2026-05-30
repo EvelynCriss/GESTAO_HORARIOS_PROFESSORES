@@ -4,26 +4,43 @@
 
 {% block content %}
 <div class="page-header">
-    <h1 class="page-title">Grade Horária por Professor</h1>
+    <h1 class="page-title">Painel de Grade Horária</h1>
+    <a href="{{ url_for('exportar_excel') }}" class="btn"
+        style="background-color: #2e7d32; color: white; display: flex; align-items: center; gap: 8px;">
+        <span>📊</span> Exportar para Excel
+    </a>
 </div>
 
-<div class="toolbar">
-    <div class="search-container">
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar professor ou disciplina..." onkeyup="filtrarGrade()">
+<div class="toolbar"
+    style="display: flex; gap: 20px; align-items: center; background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 30px;">
+    <div class="form-group" style="margin-bottom: 0; flex: 1; max-width: 250px;">
+        <label class="form-label" style="font-size: 14px; margin-top: 0; font-weight: 700;" for="tipo_visao">Classificar
+            por:</label>
+        <select id="tipo_visao" class="form-control" onchange="alternarTipoVisao()">
+            <option value="" disabled selected>Escolha uma opção...</option>
+            <option value="professor">👨‍🏫 Professor</option>
+            <option value="curso">🎓 Curso</option>
+        </select>
+    </div>
+
+    <div id="wrapper_seletor_especifico" class="form-group"
+        style="margin-bottom: 0; flex: 1; max-width: 350px; display: none;">
+        <label id="label_especifico" class="form-label" style="font-size: 14px; margin-top: 0; font-weight: 700;"
+            for="seletor_especifico">Selecionar:</label>
+        <select id="seletor_especifico" class="form-control" onchange="mostrarGradeSelecionada()">
+        </select>
     </div>
 </div>
 
-{% if grade %}
-    <div id="gradeContainer">
-        {% for professor, dados_prof in grade.items() %}
-        <div class="content-section prof-card" style="margin-bottom: 35px;">
-            
-            <div class="prof-header" onclick="toggleCard(this)">
+<div id="gradeContainer">
+    <div id="visao_professores" style="display: none;">
+        {% for professor, dados_prof in grade_professores.items() %}
+        <div class="content-section prof-card card-grade-item" id="grade_prof_{{ dados_prof.id }}"
+            style="margin-bottom: 35px; display: none;">
+            <div class="prof-header" style="cursor: default;">
                 <div class="prof-icon">👨‍🏫</div>
                 <h2 class="prof-title">{{ professor }}</h2>
-                <span class="toggle-icon">▼</span>
             </div>
-
             <div class="prof-body">
                 <div class="table-container">
                     <table class="data-table calendar-table">
@@ -38,32 +55,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for periodo, horario_label in [('Matutino', '08:00'), ('Vespertino', '13:30'), ('Noturno', '19:00'), ('Integral', 'A definir')] %}
                             <tr>
                                 <td class="time-cell">
-                                    <span class="time-label">{{ periodo }}</span>
-                                    <small>{{ horario_label }}</small>
+                                    <span class="time-label">Noturno</span>
+                                    <small>19:00 às 22:10</small>
                                 </td>
                                 {% for dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'] %}
-                                    {% set disponivel = dados_prof.dias_disponiveis and dia in dados_prof.dias_disponiveis %}
-                                    <td data-dia="{{ dia }}" data-periodo="{{ periodo }}" data-prof-id="{{ dados_prof.id }}"
-                                        class="{% if not disponivel %}unavailable-day{% endif %}"
-                                        ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
-                                        
-                                        {% for a in dados_prof.aulas %}
-                                            {% if a.dia_semana == dia and a.curso_periodo == periodo %}
-                                                <div class="class-box" id="aula-{{ a.id }}" draggable="true" 
-                                                     ondragstart="drag(event)" ondragend="dragEnd(event)"
-                                                     data-id="{{ a.id }}" data-periodo="{{ a.curso_periodo }}" data-prof-id="{{ dados_prof.id }}">
-                                                    <div class="course-title">{{ a.curso_nome }}</div>
-                                                    <div class="subject-title">{{ a.disciplina_nome }}</div>
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
+                                {% set disponivel = dados_prof.dias_disponiveis and dia in dados_prof.dias_disponiveis
+                                %}
+                                <td data-dia="{{ dia }}" data-alvo-id="{{ dados_prof.id }}" data-tipo-grade="professor"
+                                    class="{% if not disponivel %}unavailable-day{% endif %}"
+                                    ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+
+                                    {% for a in dados_prof.aulas %}
+                                    {% if a.dia_semana == dia %}
+                                    <div class="class-box" id="aula-prof-{{ a.id }}" draggable="true"
+                                        ondragstart="drag(event)" ondragend="dragEnd(event)" data-id="{{ a.id }}"
+                                        data-prof-id="{{ a.professor_id }}" data-curso-id="{{ a.curso_id }}"
+                                        style="border: 1px solid {{ a.disciplina_cor or '#29b7eb' }}40; border-left: 5px solid {{ a.disciplina_cor or '#29b7eb' }}; background-color: {{ a.disciplina_cor or '#29b7eb' }}15;">
+                                        <div class="course-title"
+                                            style="color: {{ a.disciplina_cor or '#12084f' }}; font-weight: 800;">
+                                            {{ a.curso_nome }} ({{ a.curso_periodo }})
+                                        </div>
+                                        <div class="subject-title" style="color: #333;">{{ a.disciplina_nome }}</div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
                                 {% endfor %}
                             </tr>
-                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -71,144 +91,253 @@
         </div>
         {% endfor %}
     </div>
-{% endif %}
+
+    <div id="visao_cursos" style="display: none;">
+        {% for curso_nome, dados_curso in grade_cursos.items() %}
+        <div class="content-section prof-card card-grade-item" id="grade_curso_{{ dados_curso.id }}"
+            style="margin-bottom: 35px; display: none;">
+            <div class="prof-header" style="cursor: default;">
+                <div class="prof-icon">🎓</div>
+                <h2 class="prof-title">{{ curso_nome }}</h2>
+            </div>
+            <div class="prof-body">
+                <div class="table-container">
+                    <table class="data-table calendar-table">
+                        <thead>
+                            <tr>
+                                <th class="time-header">Turno</th>
+                                <th>Segunda</th>
+                                <th>Terça</th>
+                                <th>Quarta</th>
+                                <th>Quinta</th>
+                                <th>Sexta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="time-cell">
+                                    <span class="time-label">Noturno</span>
+                                    <small>19:00 às 22:10</small>
+                                </td>
+                                {% for dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'] %}
+                                <td data-dia="{{ dia }}" data-alvo-id="{{ dados_curso.id }}" data-tipo-grade="curso"
+                                    ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+
+                                    {% for a in dados_curso.aulas %}
+                                    {% if a.dia_semana == dia %}
+                                    <div class="class-box" id="aula-curso-{{ a.id }}" draggable="true"
+                                        ondragstart="drag(event)" ondragend="dragEnd(event)" data-id="{{ a.id }}"
+                                        data-prof-id="{{ a.professor_id }}" data-curso-id="{{ a.curso_id }}"
+                                        style="border: 1px solid {{ a.disciplina_cor or '#29b7eb' }}40; border-left: 5px solid {{ a.disciplina_cor or '#29b7eb' }}; background-color: {{ a.disciplina_cor or '#29b7eb' }}15;">
+                                        <div class="course-title"
+                                            style="color: {{ a.disciplina_cor or '#12084f' }}; font-weight: 800;">
+                                            {{ a.curso_nome }} ({{ a.curso_periodo }})
+                                        </div>
+                                        <div class="subject-title" style="color: #333; font-weight: 600;">{{
+                                            a.disciplina_nome }}</div>
+                                        <div
+                                            style="font-size: 11px; color: #666; margin-top: 4px; border-top: 1px dashed #ddd; padding-top: 4px;">
+                                            Prof: {{ a.professor_nome }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
 <script>
-    // ==========================================
-    // LÓGICA DE PESQUISA
-    // ==========================================
-    function filtrarGrade() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let cards = document.querySelectorAll('.prof-card');
+    const professoresLista = [
+        {% for professor, dados_prof in grade_professores.items() %}
+    { id: "{{ dados_prof.id }}", nome: "{{ professor }}" },
+    {% endfor %}
+    ];
 
-        cards.forEach(card => {
-            let textoCard = card.innerText.toLowerCase();
-            if (textoCard.includes(input)) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
+    const cursosLista = [
+        {% for curso_nome, dados_curso in grade_cursos.items() %}
+    { id: "{{ dados_curso.id }}", nome: "{{ curso_nome }}" },
+    {% endfor %}
+    ];
+
+    function alternarTipoVisao() {
+        const tipo = document.getElementById("tipo_visao").value;
+        const seletor = document.getElementById("seletor_especifico");
+        const wrapper = document.getElementById("wrapper_seletor_especifico");
+        const label = document.getElementById("label_especifico");
+
+        if (tipo) localStorage.setItem('grade_tipo_visao', tipo);
+
+        document.getElementById("visao_professores").style.display = "none";
+        document.getElementById("visao_cursos").style.display = "none";
+        ocultarTodosCards();
+        seletor.innerHTML = "";
+
+        if (tipo === "professor") {
+            label.textContent = "Selecionar Professor:";
+            seletor.innerHTML = '<option value="" disabled selected>Escolha o professor...</option>';
+            professoresLista.forEach(p => {
+                let opt = document.createElement("option");
+                opt.value = p.id;
+                opt.textContent = p.nome;
+                seletor.appendChild(opt);
+            });
+            document.getElementById("visao_professores").style.display = "block";
+            wrapper.style.display = "block";
+        } else if (tipo === "curso") {
+            label.textContent = "Selecionar Curso / Período:";
+            seletor.innerHTML = '<option value="" disabled selected>Escolha o curso...</option>';
+            cursosLista.forEach(c => {
+                let opt = document.createElement("option");
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                seletor.appendChild(opt);
+            });
+            document.getElementById("visao_cursos").style.display = "block";
+            wrapper.style.display = "block";
+        }
+    }
+
+    function mostrarGradeSelecionada() {
+        ocultarTodosCards();
+        const tipo = document.getElementById("tipo_visao").value;
+        const idSelecionado = document.getElementById("seletor_especifico").value;
+
+        if (idSelecionado) localStorage.setItem('grade_id_selecionado', idSelecionado);
+
+        if (tipo === "professor") {
+            const card = document.getElementById(`grade_prof_${idSelecionado}`);
+            if (card) card.style.display = "block";
+        } else if (tipo === "curso") {
+            const card = document.getElementById(`grade_curso_${idSelecionado}`);
+            if (card) card.style.display = "block";
+        }
+    }
+
+    function ocultarTodosCards() {
+        document.querySelectorAll(".card-grade-item").forEach(card => {
+            card.style.display = "none";
         });
     }
 
-    // ==========================================
-    // LÓGICA DE DRAG AND DROP (SEGURA E BLINDADA)
-    // ==========================================
-    function drag(e) {
-        e.dataTransfer.setData("element_id", e.target.id);
-        e.dataTransfer.setData("aula_id", e.target.getAttribute('data-id'));
-        e.dataTransfer.setData("periodo", e.target.getAttribute('data-periodo'));
-        e.dataTransfer.setData("prof_id", e.target.getAttribute('data-prof-id'));
-        
-        // Deixa a caixinha "translúcida"
-        setTimeout(() => e.target.style.opacity = '0.5', 0);
+    document.addEventListener("DOMContentLoaded", function () {
+        const tipoSalvo = localStorage.getItem('grade_tipo_visao');
+        const idSalvo = localStorage.getItem('grade_id_selecionado');
+
+        if (tipoSalvo) {
+            const seletorTipo = document.getElementById("tipo_visao");
+            seletorTipo.value = tipoSalvo;
+            alternarTipoVisao();
+
+            if (idSalvo) {
+                const seletorEspecifico = document.getElementById("seletor_especifico");
+
+                const opcaoExiste = Array.from(seletorEspecifico.options).some(opt => opt.value === idSalvo);
+
+                if (opcaoExiste) {
+                    seletorEspecifico.value = idSalvo;
+                    mostrarGradeSelecionada();
+                }
+            }
+        }
+    });
+
+    function obterElementoSeguro(target, seletor) {
+        let elemento = target.nodeType === 3 ? target.parentNode : target;
+        return elemento.closest(seletor);
     }
 
-    // A MÁGICA AQUI: Ocorre sempre que você soltar o mouse, independente de onde for.
+    function drag(e) {
+        let box = obterElementoSeguro(e.target, '.class-box');
+        if (!box) return;
+
+        e.dataTransfer.setData("aula_id", box.getAttribute('data-id'));
+        e.dataTransfer.setData("prof_id", box.getAttribute('data-prof-id'));
+        e.dataTransfer.setData("curso_id", box.getAttribute('data-curso-id'));
+
+        setTimeout(() => box.style.opacity = '0.5', 0);
+    }
+
     function dragEnd(e) {
-        e.target.style.opacity = '1';
+        let box = obterElementoSeguro(e.target, '.class-box');
+        if (box) {
+            box.style.opacity = '1';
+        }
     }
 
     function allowDrop(e) {
-        let td = e.target.closest('td');
+        let td = obterElementoSeguro(e.target, 'td');
         if (!td || td.classList.contains('time-cell') || td.classList.contains('unavailable-day')) return;
-        
         e.preventDefault();
         td.classList.add('drag-over');
     }
 
     function dragLeave(e) {
-        let td = e.target.closest('td');
+        let td = obterElementoSeguro(e.target, 'td');
         if (td) td.classList.remove('drag-over');
     }
 
     function drop(e) {
         e.preventDefault();
-        let td = e.target.closest('td');
+        let td = obterElementoSeguro(e.target, 'td');
         if (td) td.classList.remove('drag-over');
 
-        let elementId = e.dataTransfer.getData("element_id");
-        let draggedElement = document.getElementById(elementId);
-        
-        // As regras de bloqueio continuam, mas não precisamos mais repor a opacidade aqui
         if (!td || td.classList.contains('unavailable-day')) {
             alert("Operação bloqueada: O professor não atende neste dia da semana.");
             return;
         }
 
-        let aulaId = e.dataTransfer.getData("aula_id");
-        let draggedPeriodo = e.dataTransfer.getData("periodo");
-        let draggedProfId = e.dataTransfer.getData("prof_id");
-        
-        let targetPeriodo = td.getAttribute('data-periodo');
-        let targetProfId = td.getAttribute('data-prof-id');
-        let novoDia = td.getAttribute('data-dia');
+        const aulaId = e.dataTransfer.getData("aula_id");
+        const draggedProfId = e.dataTransfer.getData("prof_id");
+        const draggedCursoId = e.dataTransfer.getData("curso_id");
 
-        if (draggedProfId !== targetProfId) {
+        if (!aulaId || aulaId === "null") {
+            alert("Erro de captura. Por favor, tente arrastar o cartão novamente clicando no centro dele.");
+            return;
+        }
+
+        const targetTipoGrade = td.getAttribute('data-tipo-grade');
+        const targetAlvoId = td.getAttribute('data-alvo-id');
+        const novoDia = td.getAttribute('data-dia');
+
+        if (targetTipoGrade === "professor" && String(draggedProfId) !== String(targetAlvoId)) {
             alert("Operação bloqueada: Você não pode arrastar uma aula para a grade de outro professor.");
             return;
         }
 
-        if (draggedPeriodo !== targetPeriodo) {
-            alert("Aviso: O horário da aula está vinculado ao turno do Curso. Você só pode arrastar a aula para os lados (alterar o Dia da Semana).");
-            return;
-        }
-        
-        if (td.querySelectorAll('.class-box').length > 0 && draggedElement.parentElement !== td) {
-            alert("Conflito: Este horário já possui uma aula alocada. Mova a aula existente para liberar o espaço primeiro.");
+        if (targetTipoGrade === "curso" && String(draggedCursoId) !== String(targetAlvoId)) {
+            alert("Operação bloqueada: Você não pode arrastar uma aula para a grade de outro curso.");
             return;
         }
 
-        if (draggedElement.parentElement === td) return;
+        if (targetTipoGrade === "curso" && td.querySelectorAll('.class-box').length > 0) {
+            alert("Conflito: A grade deste curso já possui uma aula alocada neste dia.");
+            return;
+        }
 
         fetch("{{ url_for('mover_aula') }}", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                aula_id: aulaId,
-                novo_dia: novoDia
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ aula_id: aulaId, novo_dia: novoDia })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                td.appendChild(draggedElement); 
-            } else {
-                alert(data.message); 
-            }
-        })
-        .catch(error => {
-            alert("Ocorreu um erro ao comunicar com o servidor. Tente recarregar a página.");
-        });
-    }
-    // Função para abrir/fechar cards
-    function toggleCard(element) {
-        let card = element.closest('.prof-card');
-        card.classList.toggle('open');
-    }
-    function filtrarGrade() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let cards = document.querySelectorAll('.prof-card');
-
-        cards.forEach(card => {
-            let textoCard = card.innerText.toLowerCase();
-            
-            if (input.length > 0) {
-                // Se o usuário está digitando
-                if (textoCard.includes(input)) {
-                    card.style.display = ""; // Mostra o card
-                    card.classList.add('open'); // Força a abertura para ver o resultado
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.reload();
                 } else {
-                    card.style.display = "none"; // Esconde se não achar
+                    alert(data.message);
                 }
-            } else {
-                // Se a pesquisa estiver vazia, mostra todos, mas fecha todos (estado inicial)
-                card.style.display = "";
-                card.classList.remove('open'); 
-            }
-        });
+            })
+            .catch(error => {
+                alert("Erro de comunicação com o servidor.");
+            });
     }
 </script>
 {% endblock %}

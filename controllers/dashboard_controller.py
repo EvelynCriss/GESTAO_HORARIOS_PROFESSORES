@@ -8,17 +8,11 @@ def configura_rotas(app):
     @app.route('/dashboard')
     def dashboard():
 
-        # Verifica login
         if 'loggedin' not in session:
             return redirect(url_for('login'))
 
-        # Conexão banco
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
-
-        # =========================
-        # TOTAL PROFESSORES
-        # =========================
 
         cursor.execute("""
             SELECT COUNT(*) AS total
@@ -27,10 +21,6 @@ def configura_rotas(app):
 
         total_professores = cursor.fetchone()['total']
 
-        # =========================
-        # TOTAL CURSOS
-        # =========================
-
         cursor.execute("""
             SELECT COUNT(*) AS total
             FROM cursos
@@ -38,20 +28,12 @@ def configura_rotas(app):
 
         total_cursos = cursor.fetchone()['total']
 
-        # =========================
-        # TOTAL DISCIPLINAS
-        # =========================
-
         cursor.execute("""
             SELECT COUNT(*) AS total
             FROM disciplinas
         """)
 
         total_disciplinas = cursor.fetchone()['total']
-
-        # =========================
-        # TOTAL AULAS
-        # =========================
 
         cursor.execute("""
             SELECT COUNT(*) AS total
@@ -61,10 +43,6 @@ def configura_rotas(app):
         total_aulas = cursor.fetchone()['total']
 
         conn.close()
-
-        # =========================
-        # DADOS DASHBOARD
-        # =========================
 
         stats = {
 

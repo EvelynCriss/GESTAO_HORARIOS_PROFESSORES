@@ -8,8 +8,6 @@ class Curso:
     def get_connection():
         return mysql.connector.connect(**db_config)
 
-
-
     @staticmethod
     def get_cursos():
 
@@ -27,7 +25,6 @@ class Curso:
         conn.close()
 
         return cursos
-
 
     @staticmethod
     def get_curso(id):
@@ -47,8 +44,6 @@ class Curso:
 
         return curso
 
-
-
     @staticmethod
     def criar_curso(nome, periodo, campus):
 
@@ -66,8 +61,6 @@ class Curso:
         conn.commit()
 
         conn.close()
-
-
 
     @staticmethod
     def atualizar_curso(id, nome, periodo, campus):
@@ -90,9 +83,6 @@ class Curso:
         conn.commit()
 
         conn.close()
-
-
-
 
     @staticmethod
     def deletar_curso(id):

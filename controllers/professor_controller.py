@@ -1,4 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
+import mysql.connector
+from config import db_config
 from models.professor import Professor
 from models.disponibilidade import Disponibilidade
 
@@ -58,7 +60,30 @@ def configura_rotas(app):
 
     @app.route('/professores/delete/<int:id>')
     def deletar_professor(id):
-        Disponibilidade.deletar_por_professor(id)  # ← apaga os dias antes
-        Professor.deletar_professor(id)
-        flash("Professor deletado com sucesso!", "success")
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+
+        try:
+            cursor.execute(
+                "SELECT id FROM aulas WHERE professor_id = %s LIMIT 1", (id,))
+            possui_aulas = cursor.fetchone()
+
+            if possui_aulas:
+                flash("Ação bloqueada: Este professor já possui Aulas marcadas na grade horária. Remova as aulas dele antes de excluí-lo do sistema.", "warning")
+                cursor.close()
+                conn.close()
+                return redirect(url_for('listar_professores'))
+
+            cursor.close()
+            conn.close()
+
+            Disponibilidade.deletar_por_professor(id)
+            Professor.deletar_professor(id)
+            flash("Professor deletado com sucesso!", "success")
+
+        except mysql.connector.Error as err:
+            flash(f"Erro no banco de dados: {err}", "danger")
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
+
         return redirect(url_for('listar_professores'))

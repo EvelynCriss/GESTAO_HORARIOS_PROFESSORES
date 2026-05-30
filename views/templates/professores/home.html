@@ -5,55 +5,143 @@
 {% block content %}
 <div class="page-header">
     <h1 class="page-title">Professores</h1>
+</div>
+
+<div class="toolbar">
+    <div class="search-filter-container">
+        <input type="text" id="searchInput" class="form-control"
+            placeholder="Pesquisar por nome, email ou dia disponível...">
+    </div>
     <a href="{{ url_for('add_professor') }}" class="btn btn-primary">Adicionar Professor</a>
 </div>
 
 <div class="content-section">
     <div class="table-container">
-        <table class="data-table">
+        <table class="data-table" id="professoresTable">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Telefone</th>
-                    <th>Dias Disponíveis</th>
+                    <th class="sortable" onclick="ordenarTabela(1, 'texto')">Nome <span class="sort-icon">⇅</span></th>
+                    <th class="sortable" onclick="ordenarTabela(2, 'texto')">Email <span class="sort-icon">⇅</span></th>
+                    <th class="sortable" onclick="ordenarTabela(3, 'texto')">Telefone <span class="sort-icon">⇅</span>
+                    </th>
+                    <th class="sortable" onclick="ordenarTabela(4, 'dia')">Dias Disponíveis <span
+                            class="sort-icon">⇅</span></th>
                     <th style="width: 200px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 {% if professores %}
-                    {% for p in professores %}
-                    <tr>
-                        <td>{{ p.id }}</td>
-                        <td><strong>{{ p.nome }}</strong></td>
-                        <td>{{ p.email or '-' }}</td>
-                        <td>{{ p.telefone or '-' }}</td>
-                        <td>{{ p.dias_disponiveis or '-' }}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ url_for('edit_professor', id=p.id) }}" 
-                                   class="btn btn-secondary btn-sm">Editar</a>
-                                <a href="{{ url_for('deletar_professor', id=p.id) }}" 
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Tem certeza que deseja deletar este professor?')">Deletar</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                {% for p in professores %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td><strong>{{ p.nome }}</strong></td>
+                    <td>{{ p.email or '-' }}</td>
+                    <td>{{ p.telefone or '-' }}</td>
+                    <td>{{ p.dias_disponiveis or '-' }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('edit_professor', id=p.id) }}"
+                                class="btn btn-secondary btn-sm">Editar</a>
+                            <a href="{{ url_for('deletar_professor', id=p.id) }}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Tem certeza que deseja deletar este professor?')">Deletar</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
                 {% else %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
-                            Nenhum professor cadastrado ainda.
-                            <br>
-                            <a href="{{ url_for('add_professor') }}" style="color: #12084f;">
-                                Clique aqui para adicionar o primeiro
-                            </a>
-                        </td>
-                    </tr>
+                <tr class="empty-row">
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                        Nenhum professor cadastrado ainda.
+                        <br>
+                        <a href="{{ url_for('add_professor') }}" style="color: #12084f;">
+                            Clique aqui para adicionar o primeiro
+                        </a>
+                    </td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', filtrarTabela);
+
+    function filtrarTabela() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let table = document.getElementById('professoresTable');
+        let trs = table.querySelectorAll('tbody tr');
+
+        trs.forEach(tr => {
+            if (tr.classList.contains('empty-row')) return;
+
+            let match = false;
+            for (let i = 1; i <= 4; i++) {
+                if (tr.cells[i].textContent.toLowerCase().includes(input)) {
+                    match = true;
+                    break;
+                }
+            }
+            tr.style.display = match ? '' : 'none';
+        });
+    }
+
+    let direcaoOrdenacao = {};
+
+    function obterPesoDia(texto) {
+        let t = texto.toLowerCase().trim();
+        if (t.includes('seg')) return 1;
+        if (t.includes('ter')) return 2;
+        if (t.includes('qua')) return 3;
+        if (t.includes('qui')) return 4;
+        if (t.includes('sex')) return 5;
+        return 99;
+    }
+
+    function ordenarTabela(columnIndex, tipo) {
+        let table = document.getElementById('professoresTable');
+        let tbody = table.querySelector('tbody');
+        let rows = Array.from(tbody.querySelectorAll('tr'));
+
+        if (rows.length === 1 && rows[0].classList.contains('empty-row')) return;
+
+        if (direcaoOrdenacao[columnIndex] === undefined) {
+            direcaoOrdenacao[columnIndex] = true;
+        }
+        let ascendente = direcaoOrdenacao[columnIndex];
+        direcaoOrdenacao[columnIndex] = !ascendente;
+
+        document.querySelectorAll('.sort-icon').forEach(icon => icon.textContent = '⇅');
+
+        let cabecalhoAtual = table.querySelectorAll('th')[columnIndex];
+        let iconeAtual = cabecalhoAtual.querySelector('.sort-icon');
+        if (iconeAtual) {
+            iconeAtual.textContent = ascendente ? '↑' : '↓';
+        }
+
+        rows.sort((a, b) => {
+            let celulaA = a.cells[columnIndex].textContent.trim();
+            let celulaB = b.cells[columnIndex].textContent.trim();
+
+            if (tipo === 'dia') {
+                let pesoA = obterPesoDia(celulaA);
+                let pesoB = obterPesoDia(celulaB);
+
+                if (pesoA < pesoB) return ascendente ? -1 : 1;
+                if (pesoA > pesoB) return ascendente ? 1 : -1;
+                return 0;
+            }
+
+            let normA = celulaA.toLowerCase();
+            let normB = celulaB.toLowerCase();
+
+            if (normA < normB) return ascendente ? -1 : 1;
+            if (normA > normB) return ascendente ? 1 : -1;
+            return 0;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
 {% endblock %}

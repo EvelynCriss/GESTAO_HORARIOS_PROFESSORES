@@ -10,38 +10,44 @@
 
 <div class="form-wrapper">
     <form method="POST" action="{{ url_for('edit_curso', id=curso.id) }}">
-        
+
         <div class="form-group">
             <label class="form-label" for="nome">Nome do Curso</label>
-            <input type="text" 
-                   class="form-control" 
-                   id="nome" 
-                   name="nome" 
-                   value="{{ curso.nome }}"
-                   required
-                   placeholder="Ex: Engenharia de Software">
+            <input type="text" class="form-control" id="nome" name="nome" value="{{ curso.nome }}" required
+                placeholder="Ex: Engenharia de Software">
         </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label" for="periodo">Período</label>
+                <label class="form-label" for="periodo">Período Acadêmico</label>
                 <select class="form-control" id="periodo" name="periodo" required>
-                    <option value="Matutino" {% if curso.periodo == 'Matutino' %}selected{% endif %}>Matutino</option>
-                    <option value="Vespertino" {% if curso.periodo == 'Vespertino' %}selected{% endif %}>Vespertino</option>
-                    <option value="Noturno" {% if curso.periodo == 'Noturno' %}selected{% endif %}>Noturno</option>
-                    <option value="Integral" {% if curso.periodo == 'Integral' %}selected{% endif %}>Integral</option>
+                    <option value="1º Período" {% if curso.periodo=='1º Período' %}selected{% endif %}>1º Período
+                    </option>
+                    <option value="2º Período" {% if curso.periodo=='2º Período' %}selected{% endif %}>2º Período
+                    </option>
+                    <option value="3º Período" {% if curso.periodo=='3º Período' %}selected{% endif %}>3º Período
+                    </option>
+                    <option value="4º Período" {% if curso.periodo=='4º Período' %}selected{% endif %}>4º Período
+                    </option>
+                    <option value="5º Período" {% if curso.periodo=='5º Período' %}selected{% endif %}>5º Período
+                    </option>
+                    <option value="6º Período" {% if curso.periodo=='6º Período' %}selected{% endif %}>6º Período
+                    </option>
+                    <option value="7º Período" {% if curso.periodo=='7º Período' %}selected{% endif %}>7º Período
+                    </option>
+                    <option value="8º Período" {% if curso.periodo=='8º Período' %}selected{% endif %}>8º Período
+                    </option>
+                    <option value="9º Período" {% if curso.periodo=='9º Período' %}selected{% endif %}>9º Período
+                    </option>
+                    <option value="10º Período" {% if curso.periodo=='10º Período' %}selected{% endif %}>10º Período
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="campus">Campus</label>
-                <input type="text" 
-                       class="form-control" 
-                       id="campus" 
-                       name="campus"
-                       value="{{ curso.campus }}"
-                       required
-                       placeholder="Ex: Campus Central">
+                <input type="text" class="form-control" id="campus" name="campus" value="{{ curso.campus }}" required
+                    placeholder="Ex: Campus Central">
             </div>
         </div>
 
