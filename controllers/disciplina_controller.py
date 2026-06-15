@@ -1,10 +1,10 @@
 from flask import render_template, request, redirect, url_for, flash
+import mysql.connector
 from models.disciplina import Disciplina
 from models.curso import Curso
 
 
 def configura_rotas(app):
-
 
     @app.route('/disciplinas')
     def listar_disciplinas():
@@ -15,7 +15,6 @@ def configura_rotas(app):
             'disciplinas/home.html',
             disciplinas=disciplinas
         )
-
 
     @app.route('/disciplinas/add', methods=['GET', 'POST'])
     def add_disciplina():
@@ -61,7 +60,6 @@ def configura_rotas(app):
 
     @app.route('/disciplinas/edit/<int:id>',
                methods=['GET', 'POST'])
-
     def edit_disciplina(id):
 
         disciplina = Disciplina.get_disciplina(id)
@@ -96,18 +94,15 @@ def configura_rotas(app):
             cursos=cursos
         )
 
-
     @app.route('/disciplinas/delete/<int:id>')
-
     def deletar_disciplina(id):
+        try:
+            Disciplina.deletar_disciplina(id)
+            flash("Disciplina deletada com sucesso!", "success")
+        except mysql.connector.Error as err:
+            if err.errno == 1451:
+                flash("Ação bloqueada: Esta disciplina está sendo usada em uma ou mais Aulas na grade horária. Você precisa remover essas aulas da grade primeiro.", "warning")
+            else:
+                flash(f"Erro no banco de dados: {err}", "danger")
 
-        Disciplina.deletar_disciplina(id)
-
-        flash(
-            "Disciplina deletada com sucesso!",
-            "success"
-        )
-
-        return redirect(
-            url_for('listar_disciplinas')
-        )
+        return redirect(url_for('listar_disciplinas'))

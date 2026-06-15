@@ -33,7 +33,7 @@
 
             <!-- Você pode trocar depois -->
             <img
-                src="{{ url_for('static', filename='imagens/logo_unisenai.jpg') }}"
+                src="{{ url_for('static', filename='imagens/logo_unisenai.png') }}"
                 alt="Logo"
                 class="logo"
             >
@@ -42,23 +42,11 @@
 
         <div class="header-actions">
 
-            <div class="profile">
-
-                <div class="profile-icon">
-                    👤
-                </div>
-
-                <span class="profile-name">
-                    Administrador
-                </span>
-
-            </div>
-
             <a
                 href="{{ url_for('logout') }}"
                 class="btn-logout"
             >
-                Sair
+                ⮎ Sair
             </a>
 
         </div>
@@ -158,8 +146,8 @@
 
             <!-- GRADE HORÁRIA -->
             <a
-                href="{{ url_for('listar_aulas') }}"
-                class="nav-item {% if 'aula' in request.endpoint %}active{% endif %}"
+                href="{{ url_for('grade_horaria') }}"
+                class="nav-item {% if 'grade_horaria' in request.endpoint %}active{% endif %}"
             >
 
                 <span class="nav-icon">

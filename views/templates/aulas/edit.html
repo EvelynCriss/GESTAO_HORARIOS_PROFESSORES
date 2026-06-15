@@ -11,39 +11,36 @@
 <div class="content-section">
     <form method="POST" action="{{ url_for('edit_aula', id=aula.id) }}">
 
-        <div class="form-row">
-            <div class="form-group">
-                <label class="form-label" for="curso_id">Curso</label>
-                <select class="form-control" id="curso_id" name="curso_id" required>
-                    <option value="">Selecione o curso</option>
-                    {% for c in cursos %}
-                    <option value="{{ c.id }}" {% if c.id == aula.curso_id %}selected{% endif %}>
-                        {{ c.nome }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
+        <div class="form-group">
+            <label class="form-label" for="curso_id">Curso</label>
+            <select class="form-control" id="curso_id" name="curso_id" required>
+                {% for curso in cursos %}
+                <option value="{{ curso.id }}" {% if curso.id==aula.curso_id %}selected{% endif %}>
+                    {{ curso.nome }} ({{ curso.periodo }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label class="form-label" for="disciplina_id">Disciplina</label>
-                <select class="form-control" id="disciplina_id" name="disciplina_id" required>
-                    <option value="">Selecione a disciplina</option>
-                    {% for d in disciplinas %}
-                    <option value="{{ d.id }}" {% if d.id == aula.disciplina_id %}selected{% endif %}>
-                        {{ d.nome }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
+        <div class="form-group">
+            <label class="form-label" for="disciplina_id">Disciplina</label>
+            <select class="form-control" id="disciplina_id" name="disciplina_id" required>
+                {% for d in disciplinas %}
+                <option value="{{ d.id }}" data-curso="{{ d.curso_id }}" {% if d.id==aula.disciplina_id %}selected{%
+                    endif %}>
+                    {{ d.nome }}
+                </option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label" for="professor_id">Professor</label>
                 <select class="form-control" id="professor_id" name="professor_id" required>
-                    <option value="">Selecione o professor</option>
                     {% for p in professores %}
-                    <option value="{{ p.id }}" {% if p.id == aula.professor_id %}selected{% endif %}>
+                    <option value="{{ p.id }}" data-dias="{{ p.dias_disponiveis or '' }}" {% if p.id==aula.professor_id
+                        %}selected{% endif %}>
                         {{ p.nome }}
                     </option>
                     {% endfor %}
@@ -53,20 +50,7 @@
             <div class="form-group">
                 <label class="form-label" for="dia_semana">Dia da Semana</label>
                 <select class="form-control" id="dia_semana" name="dia_semana" required>
-                    <option value="">Selecione o dia</option>
-                    {% for dia in ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'] %}
-                    <option value="{{ dia }}" {% if dia == aula.dia_semana %}selected{% endif %}>
-                        {{ dia }}
-                    </option>
-                    {% endfor %}
                 </select>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label class="form-label">Horário</label>
-                <input type="text" class="form-control" value="19h às 22h10" disabled>
             </div>
         </div>
 
@@ -76,4 +60,108 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const cursoSelect = document.getElementById("curso_id");
+        const disciplinaSelect = document.getElementById("disciplina_id");
+        const disciplinaAtualId = "{{ aula.disciplina_id }}";
+
+        const todasAsDisciplinas = Array.from(disciplinaSelect.options)
+            .filter(opt => opt.value !== "")
+            .map(opt => ({
+                value: opt.value,
+                text: opt.text,
+                cursoId: opt.getAttribute("data-curso")
+            }));
+
+        function filtrarDisciplinas(idDisciplinaSelecionada = null) {
+            const cursoSelecionado = cursoSelect.value;
+            disciplinaSelect.innerHTML = "";
+
+            if (!cursoSelecionado) {
+                disciplinaSelect.disabled = true;
+                disciplinaSelect.innerHTML = '<option value="" disabled selected>Selecione um curso primeiro...</option>';
+                return;
+            }
+
+            const disciplinasFiltradas = todasAsDisciplinas.filter(d => String(d.cursoId) === String(cursoSelecionado));
+            const optPadrao = document.createElement("option");
+            optPadrao.value = "";
+            optPadrao.disabled = true;
+            if (!idDisciplinaSelecionada) optPadrao.selected = true;
+
+            if (disciplinasFiltradas.length === 0) {
+                disciplinaSelect.disabled = true;
+                optPadrao.textContent = "Nenhuma disciplina cadastrada para este curso";
+                disciplinaSelect.appendChild(optPadrao);
+            } else {
+                disciplinaSelect.disabled = false;
+                optPadrao.textContent = "Selecione a disciplina...";
+                disciplinaSelect.appendChild(optPadrao);
+
+                disciplinasFiltradas.forEach(d => {
+                    const opt = document.createElement("option");
+                    opt.value = d.value;
+                    opt.textContent = d.text;
+                    if (idDisciplinaSelecionada && String(d.value) === String(idDisciplinaSelecionada)) {
+                        opt.selected = true;
+                    }
+                    disciplinaSelect.appendChild(opt);
+                });
+            }
+        }
+
+        cursoSelect.addEventListener("change", () => filtrarDisciplinas(null));
+        if (cursoSelect.value) {
+            filtrarDisciplinas(disciplinaAtualId);
+        }
+
+        const professorSelect = document.getElementById("professor_id");
+        const diaSelect = document.getElementById("dia_semana");
+        const diaAtualAula = "{{ aula.dia_semana }}";
+        const diasPossiveis = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+
+        function filtrarDias(diaSelecionado = null) {
+            const opcaoSelecionada = professorSelect.options[professorSelect.selectedIndex];
+            const diasString = opcaoSelecionada.getAttribute("data-dias");
+
+            diaSelect.innerHTML = "";
+
+            if (!professorSelect.value || !diasString) {
+                diaSelect.disabled = true;
+                diaSelect.innerHTML = `<option value="" disabled selected>${!professorSelect.value ? "Selecione um professor primeiro..." : "Professor não possui dias disponíveis"}</option>`;
+                return;
+            }
+
+            const diasProfessor = diasString.split(',').map(d => d.trim());
+            diaSelect.disabled = false;
+
+            const optPadrao = document.createElement("option");
+            optPadrao.value = "";
+            optPadrao.disabled = true;
+            if (!diaSelecionado) optPadrao.selected = true;
+            optPadrao.textContent = "Selecione o dia...";
+            diaSelect.appendChild(optPadrao);
+
+            diasPossiveis.forEach(dia => {
+                if (diasProfessor.includes(dia)) {
+                    const opt = document.createElement("option");
+                    opt.value = dia;
+                    opt.textContent = dia;
+                    if (diaSelecionado === dia) {
+                        opt.selected = true;
+                    }
+                    diaSelect.appendChild(opt);
+                }
+            });
+        }
+
+        professorSelect.addEventListener("change", () => filtrarDias(null));
+        if (professorSelect.value) {
+            filtrarDias(diaAtualAula);
+        }
+    });
+</script>
 {% endblock %}
